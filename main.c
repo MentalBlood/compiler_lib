@@ -48,7 +48,6 @@ char* compile(
 	char *result = malloc(sizeof(char) * compile__chunk_size);
 	char *result_end = result;
 
-	keywords->data[(int)'n']->last_inclusion = s;
 	TreeNode *n = &keywords->tree->root;
 	State state;
 	char *copy_from;
