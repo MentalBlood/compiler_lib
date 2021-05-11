@@ -1,1 +1,1 @@
-gcc main.c && a.exe
+gcc example.c && a.exe

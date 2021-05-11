@@ -1,8 +1,3 @@
-typedef struct State {
-	int i;
-	char c;
-} State;
-
 typedef struct KeywordData {
 	char *last_inclusion;
 	int length;

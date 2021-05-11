@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 #include "prefix_tree.c"
-#include "keywords.c"
+#include "KeywordData.c"
 
 char* readFile(char *file_path) {
 	char *source = NULL;
@@ -77,18 +77,16 @@ char* compile(
 	return result;
 }
 
-void defaultStateTransform(State *state, char **copy_from, int *copy_n) {
-
-}
-
 int main(void) {
-	Keywords *keywords = createKeywordsData(128);
-	addKeyword(keywords, "\n", 'n', defaultStateTransform);
-	addKeyword(keywords, "<!--", 'o', defaultStateTransform);
-	addKeyword(keywords, "-->", 'c', defaultStateTransform);
-	addKeyword(keywords, "(param)", 'p', defaultStateTransform);
-	addKeyword(keywords, "(ref)", 'r', defaultStateTransform);
-	addKeyword(keywords, "(optional)", '?', defaultStateTransform);
+	Keywords *keywords_data = createKeywordsData(128);
+	int i = 0;
+	for (; i < keywords_number; i++)
+		addKeyword(
+			keywords_data,
+			keywords[i].keyword,
+			keywords[i].symbol,
+			keywords[i].stateTransform
+		);
 
 	return 0;
 }
