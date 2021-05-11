@@ -36,17 +36,11 @@ char* readFile(char *file_path) {
 	return source;
 }
 
-typedef struct State {
-	int i;
-	char c;
-} State;
-
 #define compile__chunk_size 100000
 
 char* compile(
 	char *file_path,
-	Keywords *keywords,
-	void (*stateTransform)(State *state, char **copy_from, int *copy_n)
+	Keywords *keywords
 ) {
 	char *s = readFile(file_path);
 	char *c = s;
@@ -64,12 +58,12 @@ char* compile(
 			n = n->children[(int)*c];
 		else {
 			if (n->value) {
+				KeywordData *current_keyword_data = keywords->data[(int)n->value[0]];
 				if (n->value[0] == '?') {
-					stateTransform(&state, &copy_from, &copy_n);
+					current_keyword_data->stateTransform(&state, &copy_from, &copy_n);
 					memcpy(result_end, copy_from, copy_n);
 					printf("?\n");
 				}
-				KeywordData *current_keyword_data = keywords->data[(int)n->value[0]];
 				current_keyword_data->last_inclusion = c - current_keyword_data->length;
 				--c;
 			}
@@ -83,14 +77,18 @@ char* compile(
 	return result;
 }
 
+void defaultStateTransform(State *state, char **copy_from, int *copy_n) {
+
+}
+
 int main(void) {
 	Keywords *keywords = createKeywordsData(128);
-	addKeyword(keywords, "\n", 'n');
-	addKeyword(keywords, "<!--", 'o');
-	addKeyword(keywords, "-->", 'c');
-	addKeyword(keywords, "(param)", 'p');
-	addKeyword(keywords, "(ref)", 'r');
-	addKeyword(keywords, "(optional)", '?');
+	addKeyword(keywords, "\n", 'n', defaultStateTransform);
+	addKeyword(keywords, "<!--", 'o', defaultStateTransform);
+	addKeyword(keywords, "-->", 'c', defaultStateTransform);
+	addKeyword(keywords, "(param)", 'p', defaultStateTransform);
+	addKeyword(keywords, "(ref)", 'r', defaultStateTransform);
+	addKeyword(keywords, "(optional)", '?', defaultStateTransform);
 
 	return 0;
 }
