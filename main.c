@@ -3,6 +3,7 @@
 
 #include "prefix_tree.c"
 #include "KeywordData.c"
+#include "argparse.c"
 
 char* readFile(char *file_path) {
 	char *source = NULL;
@@ -38,11 +39,12 @@ char* readFile(char *file_path) {
 
 #define compile__chunk_size 100000
 
-char* compile(
-	char *file_path,
+size_t compile(
+	char *input_file_path,
+	char *output_file_path,
 	Keywords *keywords
 ) {
-	char *s = readFile(file_path);
+	char *s = readFile(input_file_path);
 	char *c = s;
 	
 	char *result = malloc(sizeof(char) * compile__chunk_size);
@@ -67,13 +69,19 @@ char* compile(
 		}
 	}
 
-	*result_end = 0;
-	result = (char*)realloc(result, sizeof(char) * (result_end - result + 1));
+	size_t result_length = result_end - result;
+
+	FILE *f = fopen(output_file_path, "w");
+	if (f != NULL) 
+		fwrite(result, sizeof(char), result_length, f);
+	fclose(f);
 	
-	return result;
+	return result_length;
 }
 
-int main(void) {
+char *main__default_extensions[] = {"xml", "txt", ""};
+
+int main(int argc, char *argv[]) {
 	Keywords *keywords_data = createKeywordsData(128);
 	Keyword *current_keyword = keywords;
 	for (; current_keyword->keyword[0] != 0; current_keyword++)
@@ -83,6 +91,13 @@ int main(void) {
 			current_keyword->symbol,
 			current_keyword->stateTransform
 		);
+
+	char *input_file_path = getStrArg("i", "template.txt", argc, argv);
+	char *output_file_path = getStrArg("o", "compiled_template.py", argc, argv);
+	char **extensions = getListArg("e", main__default_extensions, argc, argv);
+
+	size_t result_length = compile(input_file_path, output_file_path, keywords_data);
+	printf("%s -> %s (%I64d chars)\n", input_file_path, output_file_path, result_length);
 
 	return 0;
 }
