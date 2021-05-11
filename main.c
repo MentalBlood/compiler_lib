@@ -59,11 +59,8 @@ char* compile(
 		else {
 			if (n->value) {
 				KeywordData *current_keyword_data = keywords->data[(int)n->value[0]];
-				if (n->value[0] == '?') {
-					current_keyword_data->stateTransform(&state, &copy_from, &copy_n);
-					memcpy(result_end, copy_from, copy_n);
-					printf("?\n");
-				}
+				current_keyword_data->stateTransform(&state, &copy_from, &copy_n);
+				memcpy(result_end, copy_from, copy_n);
 				current_keyword_data->last_inclusion = c - current_keyword_data->length;
 				--c;
 			}
