@@ -75,13 +75,13 @@ char* compile(
 
 int main(void) {
 	Keywords *keywords_data = createKeywordsData(128);
-	int i = 0;
-	for (; i < keywords_number; i++)
+	Keyword *current_keyword = keywords;
+	for (; current_keyword->keyword[0] != 0; current_keyword++)
 		addKeyword(
 			keywords_data,
-			keywords[i].keyword,
-			keywords[i].symbol,
-			keywords[i].stateTransform
+			current_keyword->keyword,
+			current_keyword->symbol,
+			current_keyword->stateTransform
 		);
 
 	return 0;
