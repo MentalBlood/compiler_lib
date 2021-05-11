@@ -1,7 +1,6 @@
 typedef struct NodeData {
 	char *last_inclusion;
 	int length;
-	char last_symbol;
 	void (*stateTransform)(State *state, char **copy_from, int *copy_n);
 } NodeData;
 
@@ -17,7 +16,6 @@ void addKeyword(
 	char *k = keyword;
 	for (; *k; k++);
 	data->length = k - keyword;
-	data->last_symbol = *k;
 	data->stateTransform = stateTransform;
 
 	treeInsert(keywords, keyword, data);
