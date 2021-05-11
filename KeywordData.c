@@ -1,7 +1,7 @@
 typedef struct NodeData {
 	char *last_inclusion;
 	int length;
-	void (*stateTransform)(char *current_character, State *state, char **copy_from, int *copy_n);
+	void (*stateTransform)(char **current_character, State *state, char **copy_from, int *copy_n);
 } NodeData;
 
 #include "prefix_tree.c"
@@ -9,7 +9,7 @@ typedef struct NodeData {
 void addKeyword(
 	Tree *keywords,
 	char *keyword,
-	void (*stateTransform)(char *current_character, State *state, char **copy_from, int *copy_n)
+	void (*stateTransform)(char **current_character, State *state, char **copy_from, int *copy_n)
 ) {
 	NodeData *data = malloc(sizeof(NodeData));
 	data->last_inclusion = NULL;

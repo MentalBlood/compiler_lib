@@ -3,7 +3,7 @@ typedef struct State {
 	char c;
 } State;
 
-void exampleStateTransform(char *current_character, State *state, char **copy_from, int *copy_n) {
+void exampleStateTransform(char **current_character, State *state, char **copy_from, int *copy_n) {
 
 }
 

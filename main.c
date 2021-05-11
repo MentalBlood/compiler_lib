@@ -59,7 +59,7 @@ size_t compile(
 		else {
 			if (n->value) {
 				NodeData *current_keyword_data = n->value;
-				current_keyword_data->stateTransform(c, &state, &copy_from, &copy_n);
+				current_keyword_data->stateTransform(&c, &state, &copy_from, &copy_n);
 				memcpy(result_end, copy_from, copy_n);
 				result_end += copy_n;
 				current_keyword_data->last_inclusion = c - current_keyword_data->length;
