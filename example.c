@@ -10,7 +10,7 @@ void exampleStateTransform(State *state, char **copy_from, int *copy_n) {
 #include "Keyword.c"
 
 Keyword keywords[] = {
-	{"some_keyword", 'n', exampleStateTransform},
+	{"some_keyword", exampleStateTransform},
 	{""}
 };
 

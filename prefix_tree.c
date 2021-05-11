@@ -5,11 +5,8 @@
 #define MAX_WORD_SIZE 32
 #define ALPHABET_SIZE 128
 
-#define false 0
-#define true 1
-
 typedef struct TreeNode {
-	char *value;
+	NodeData *value;
 	struct TreeNode **children;
 } TreeNode;
 
@@ -24,28 +21,15 @@ Tree* createTree() {
 	return tree;
 }
 
-void printInvalidWord(const char *word, int index) {
-	printf("  word: \"%s\"\n", word);
-	printf("         ");
-	int i = 0;
-	for (; i < index; i++)
-		printf(" ");
-	printf("^\n");
-}
-
-int treeInsert(Tree* tree, const char *word, char *description) {
-	// printf("%s: %s\n", word, description);
+int treeInsert(Tree* tree, const char *word, NodeData *data) {
 	TreeNode *node = &tree->root;
 	int i;
 	int word_len = (int)strlen(word);
 	for (i = 0; i < word_len; i++) {
 		int letter = (int)word[i];
 		if (letter == -1) {
-			// invalid character in the string, cannot be inserted into the tree
 			printf("failed to insert due to invalid character in word\n");
-			printInvalidWord(word, i);
-			printf("  description: \"%s\"\n", description);
-			return false;
+			return 0;
 		}
 
 		TreeNode *parent = node;
@@ -59,10 +43,8 @@ int treeInsert(Tree* tree, const char *word, char *description) {
 		}
 	}
 
-	int description_len = (int)strlen(description);
-	node->value = malloc(sizeof(char) * (description_len + 1));
-	strncpy_s(node->value, sizeof(char) * (description_len + 1), description, description_len);
-	return true;
+	node->value = data;
+	return 1;
 }
 
 void freeNodes(TreeNode *node) {
@@ -88,7 +70,7 @@ void clearTree(Tree*tree) {
 	}
 }
 
-char* treeGet(TreeNode *node, const char *word) {
+NodeData* treeGet(TreeNode *node, const char *word) {
 	int i;
 	int word_len = (int)strlen(word);
 	for (i = 0; i < word_len; i++) {
@@ -102,17 +84,14 @@ char* treeGet(TreeNode *node, const char *word) {
 	return node->value;
 }
 
-char* dictionaryLookup(Tree*tree, const char *word) {
+NodeData* dictionaryLookup(Tree *tree, const char *word) {
 	int i;
 	int word_len = (int)strlen(word);
 	for (i = 0; i < word_len; i++) {
 		int letter = (int)word[i];
-		if (letter == -1) {
-			printInvalidWord(word, i);
+		if (letter == -1)
 			return NULL;
-		}
 	}
 
-	char *description = treeGet(&tree->root, word);
-	return description;
+	return treeGet(&tree->root, word);
 }

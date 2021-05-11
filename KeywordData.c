@@ -1,39 +1,24 @@
-typedef struct KeywordData {
+typedef struct NodeData {
 	char *last_inclusion;
 	int length;
 	char last_symbol;
 	void (*stateTransform)(State *state, char **copy_from, int *copy_n);
-} KeywordData;
+} NodeData;
 
-typedef struct Keywords {
-	Tree *tree;
-	KeywordData **data;
-} Keywords;
-
-Keywords* createKeywordsData(int number_of_keywords) {
-	Keywords *result = malloc(sizeof(Keywords));
-	result->tree = createTree();
-	result->data = calloc(number_of_keywords, sizeof(KeywordData*));
-	return result;
-}
+#include "prefix_tree.c"
 
 void addKeyword(
-	Keywords *keywords,
+	Tree *keywords,
 	char *keyword,
-	char symbol,
 	void (*stateTransform)(State *state, char **copy_from, int *copy_n)
 ) {
-	char *value_to_insert = malloc(sizeof(char) * 2);
-	value_to_insert[0] = symbol;
-	value_to_insert[1] = 0;
-	treeInsert(keywords->tree, keyword, value_to_insert);
-
-	KeywordData *data = malloc(sizeof(KeywordData));
+	NodeData *data = malloc(sizeof(NodeData));
 	data->last_inclusion = NULL;
 	char *k = keyword;
 	for (; *k; k++);
 	data->length = k - keyword;
 	data->last_symbol = *k;
 	data->stateTransform = stateTransform;
-	keywords->data[(int)symbol] = data;
+
+	treeInsert(keywords, keyword, data);
 }
