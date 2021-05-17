@@ -24,7 +24,7 @@ char* readFile(char *file_path) {
 			source = malloc(sizeof(char) * (bufsize + 3));
 
 			size_t newLen = fread(source, sizeof(char), bufsize, f);
-			if ( ferror( f ) != 0 ) {
+			if (ferror( f ) != 0) {
 				free(source);
 				fclose(f);
 				return NULL;
